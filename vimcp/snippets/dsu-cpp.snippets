@@ -1,0 +1,56 @@
+snippet dsu-cpp "disjoint set union snippet for cpp" b
+
+class disjointset{
+  ll N , numComponents , largest;
+  vector<ll>sz , id , mn , mx;
+public:
+  void make(ll idx){
+    sz[idx] = 1;
+    id[idx] = idx;
+  }
+
+  disjointset(ll n){
+    N = n;
+    sz = vector<ll>(n+1);
+    id = vector<ll>(n+1);
+    for(ll i=1 ; i<=n ; i++)make(i);
+    largest = 1;
+    numComponents = n;
+  }
+
+  ll find(ll s){
+    ll root = s;
+    while(root != id[root])root = id[root];
+    while (s != root) {
+      int next = id[s];
+      id[s] = root;
+      s = next;
+    }
+    return root;
+  }
+
+  bool ask(ll x , ll y){
+    return (find(x)==find(y));
+  }
+
+  void unite(ll x , ll y){
+    if(ask(x,y))return;
+
+    ll a = find(x) , b = find(y);
+    if (sz[a] < sz[b]) {
+      sz[b] += sz[a];
+      id[a] = b;
+      sz[a] = 0;
+    } else {
+      sz[a] += sz[b];
+      id[b] = a;
+      sz[b] = 0;
+    }
+    numComponents--;
+  }
+  ll components(){
+    return numComponents;
+  }
+};
+ 
+endsnippet 
